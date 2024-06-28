@@ -300,16 +300,25 @@ mapping_city = {
     71: '乌鲁木齐',
     72: '晋城',
     73: '莆田',
-    74: '青岛'
+    74: '南阳',
+    75: '潍坊',
+    76: '绵阳',
+    77: '无锡',
+    78: '佛山',
+    79: '深圳',
+    80: '滁州',
+    81: '湖州',
+    82: '宁德',
+
 }
 
 # 使用 replace 方法替换 brand 列中的数字
 data['brand'] = data['brand'].replace(mappingBrand)
-regionCode_index=data['regionCode'].unique()
+regionCode_index=data['city'].unique()
 code_mapping = {code: idx for idx, code in enumerate(regionCode_index)}
 # print(data['regionCode'].unique().size())
-data['regionCode'] = data['regionCode'].replace(code_mapping)
-data['regionCode'] = data['regionCode'].replace(mapping_city)
+data['city'] = data['city'].replace(code_mapping)
+data['city'] = data['city'].replace(mapping_city)
 
 data.to_csv(path+'数据分析所用数据.csv', index=0)
 # 打印替换后的结果
