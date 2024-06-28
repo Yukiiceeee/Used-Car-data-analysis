@@ -113,7 +113,6 @@ Train_data.dropna(subset=['model'], inplace=True)
 # print(Train_data.head())
 # Train_data.dropna(subset=nan_count[nan_count > 0].index, inplace=True)
 
-Train_data.to_csv('test',index=0)
 
 '''
 Train_data['train']=1
@@ -229,6 +228,6 @@ mappingBrand = {
 # 使用 replace 方法替换 brand 列中的数字
 data['brand'] = data['brand'].replace(mappingBrand)
 
-data.to_csv(path+'data_带品牌名字.csv', index=0)
+data.to_csv(path+'数据分析所用数据.csv', index=0)
 # 打印替换后的结果
 print(data)
