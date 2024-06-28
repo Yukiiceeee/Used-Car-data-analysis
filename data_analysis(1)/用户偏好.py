@@ -1,5 +1,81 @@
 import pandas as pd
 from pyecharts import options as opts
+from pyecharts.charts import Pie, Bar
+
+# 1. 读取CSV文件
+df = pd.read_csv('data_1.csv')
+
+# 2. 提取所需字段，并做统计分析
+top_500_data = df.head(500)  # 假设您需要分析前500条数据
+
+# 分析品牌
+brand_counts = top_500_data['brand'].value_counts().head(10)
+brands = brand_counts.index.tolist()
+brand_counts = brand_counts.tolist()
+
+# 分析车型（bodytype）
+bodytype_counts = top_500_data['bodyType'].value_counts().head(10)
+bodytypes = bodytype_counts.index.tolist()
+bodytype_counts = bodytype_counts.tolist()
+
+# 分析价格（price），选择特定的价格区间段
+price_bins = [0, 10000, 20000, 30000, 40000, 50000, 60000]
+price_labels = ['0-10000', '10001-20000', '20001-30000', '30001-40000', '40001-50000', '50001-60000']
+top_500_data['price_range'] = pd.cut(top_500_data['price'], bins=price_bins, labels=price_labels)
+price_counts = top_500_data['price_range'].value_counts().sort_index()
+
+# 3. 绘制图形
+
+# 品牌的Pie Chart
+pie_brand = (
+    Pie()
+    .add(
+        "",
+        [list(z) for z in zip(brands, brand_counts)],
+        center=["25%", "50%"],
+    )
+    .set_global_opts(
+        title_opts=opts.TitleOpts(title="用户偏好分析 - 品牌占比"),
+        legend_opts=opts.LegendOpts(type_="scroll", pos_left="80%", orient="vertical"),
+    )
+    .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {d}%"))
+)
+
+# 车型的Pie Chart
+pie_bodytype = (
+    Pie()
+    .add(
+        "",
+        [list(z) for z in zip(bodytypes, bodytype_counts)],
+        center=["75%", "50%"],
+    )
+    .set_global_opts(
+        title_opts=opts.TitleOpts(title="用户偏好分析 - 车型占比"),
+        legend_opts=opts.LegendOpts(type_="scroll", pos_left="80%", orient="vertical"),
+    )
+    .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {d}%"))
+)
+
+# 价格的Bar Chart
+bar_price = (
+    Bar()
+    .add_xaxis(price_counts.index.tolist())
+    .add_yaxis("价格区间", price_counts.tolist())
+    .set_global_opts(
+        title_opts=opts.TitleOpts(title="用户偏好分析 - 价格分布"),
+        xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(rotate=45)),
+    )
+)
+
+# 保存图表
+pie_brand.render("品牌偏好.html")
+pie_bodytype.render("车型偏好.html")
+bar_price.render("价格偏好.html")
+
+
+"""
+import pandas as pd
+from pyecharts import options as opts
 from pyecharts.charts import Pie
 
 # 1. 读取CSV文件
@@ -26,45 +102,10 @@ c = (
         legend_opts=opts.LegendOpts(type_="scroll", pos_left="80%", orient="vertical"),
     )
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {d}%"))
-    .render("user_preferences_brand_pie_chart.html")
+    .render("品牌偏好.html")
 )
-
 """
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-# 读取CSV文件，假设文件名为data.csv，文件中的分隔符为制表符'\t'
-df = pd.read_csv('data_1.csv', sep=',')
-
-# 取前1000条数据作为用户的浏览记录
-user_browsing_history = df.head(500)
-
-# 分析用户偏好的车型、品牌等前十名数据
-top_10_models = user_browsing_history['model'].value_counts().head(10)
-top_10_brands = user_browsing_history['brand'].value_counts().head(10)
-
-# 设置绘图风格
-plt.figure(figsize=(14, 7))
-
-# 1. 扇形图 - 车型偏好
-plt.subplot(1, 2, 1)
-plt.title('Top 10 Model Preferences', fontsize=16)
-top_10_models.plot(kind='pie', autopct='%1.1f%%', startangle=140, colors=sns.color_palette('Set3', 10))
-plt.axis('equal')  # 使饼图比例相等
-plt.ylabel('')  # 不显示y轴标签
-
-# 2. 扇形图 - 品牌偏好
-plt.subplot(1, 2, 2)
-plt.title('Top 10 Brand Preferences', fontsize=16)
-top_10_brands.plot(kind='pie', autopct='%1.1f%%', startangle=140, colors=sns.color_palette('Set2', 10))
-plt.axis('equal')  # 使饼图比例相等
-plt.ylabel('')  # 不显示y轴标签
-
-plt.tight_layout()  # 调整子图之间的间距
-plt.show()
-
-"""
 
 
 """
