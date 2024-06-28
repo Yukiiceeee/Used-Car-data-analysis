@@ -1,6 +1,8 @@
 import warnings
 warnings.filterwarnings('ignore')
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -10,9 +12,6 @@ import seaborn as sns
 path = './data/'
 Train_data = pd.read_csv(path+'data_数据清洗.csv')
 Test_data = pd.read_csv(path+'used_car_testB_20200421.csv', sep=' ')
-
-
-# 使用时间：data['creatDate'] - data['regDate']，反应汽车使用时间，一般来说价格与使用时间成反比
 
 
 Test_data['used_time'] = (pd.to_datetime(Test_data['creatDate'], format='%Y%m%d', errors='coerce') -
@@ -30,14 +29,28 @@ Test_data['power_bin'] = pd.cut(Test_data['power'], bin, labels=False)
 Train_data['train']=1
 Test_data['train']=0
 data = pd.concat([Train_data, Test_data], ignore_index=True)
-data.to_csv(path+'模型构建所用数据.csv')
 
-#删除无关特征
+#删除无关特征seller,name
+data.drop(['seller','name','offerType','city'],axis=1,inplace=True)
 
-#归一化
+ #对类别特征进行 OneEncoder
+data = pd.get_dummies(data, columns=['brand', 'bodyType', 'fuelType',
+                                     'gearbox', 'notRepairedDamage', 'power_bin'],dtype=int)
+
+# #归一化
+# transformers = MinMaxScaler()
+# data = transformers.fit_transform(data)
+
+
+Train_data=data[data['train']==1]
+Test_data=data[data['train']==0]
+
+
+
 
 
 # 特征筛选 ---相关性分析 特征提取，特征选择
 
-
+Train_data.to_csv(path+'模型构建所用数据-train.csv')
+Test_data.to_csv(path+'模型构建所用数据-test.csv')
 
