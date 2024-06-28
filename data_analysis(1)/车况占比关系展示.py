@@ -1,57 +1,61 @@
 import pandas as pd
-import matplotlib.pyplot as plt
+from collections import Counter
+from pyecharts import options as opts
+from pyecharts.charts import Bar
 
-plt.rcParams['font.family'] = 'SimHei'
-# 读取CSV文件
-file_path = 'data_1.csv'  # 替换成你的CSV文件路径
-df = pd.read_csv(file_path)
+# 读取CSV文件，请替换为你的实际文件路径
+df = pd.read_csv('data.csv')
 
+# 数据预处理：筛选需要的列
+data = df[['brand', 'bodyType', 'kilometer', 'price']]
 
-# 计算不同品牌的价格分布并选取前6
-top_brands = df.groupby('brand')['price'].mean().nlargest(6)
+# 选择分析的关键属性
+categories = ['brand', 'bodyType', 'kilometer']
 
-# 计算不同型号的价格分布并选取前6
-top_body_types = df.groupby('bodyType')['price'].mean().nlargest(6)
+# 创建柱状图并保存为HTML文件
+def plot_and_save_bar_chart(category):
+    counter = Counter(data[category])
+    top_items = counter.most_common(6)  # 取出占比最多的前6数据
 
-# 计算不同里程数的价格分布并选取前6
-top_kilometers = df.groupby('kilometer')['price'].mean().nlargest(6)
+    # 如果是公里数，按照数值从大到小排序
+    if category == 'kilometer':
+        top_items = sorted(top_items, key=lambda x: x[0], reverse=True)
+    else:
+        top_items = list(reversed(top_items))  # 其他类别从低到高排序
 
-# 绘制柱状图
-plt.figure(figsize=(14, 12))
+    x_data = [item[0] for item in top_items]
+    y_data = [item[1] for item in top_items]
 
-# 绘制品牌与价格关系的柱状图
-plt.subplot(2, 2, 1)
-top_brands.plot(kind='bar', color='skyblue')
-plt.title('Top 6 品牌与价格关系')
-plt.xlabel('品牌')
-plt.ylabel('价格')
-plt.xticks(rotation=0)
-plt.grid(axis='y')
-plt.tight_layout()
-plt.show()
+    # 替换标题中的英文部分
+    if category == 'brand':
+        title = "Top 6 品牌和价格之间的关系"
+        xaxis_name = '品牌'
+    elif category == 'bodyType':
+        title = "Top 6 车型和价格之间的关系"
+        xaxis_name = '车型'
+        # 将5.0至0.0映射为车型名称
+        x_data = ['小型车', '中型车', '中型SUV', '小型MPV', '大型MPV', '跑车']
+    elif category == 'kilometer':
+        title = "Top 6 公里数和价格之间的关系"
+        xaxis_name = '公里数'
+    else:
+        title = "Top 6 数据和价格之间的关系"
+        xaxis_name = '数据'
 
+    bar = (
+        Bar()
+        .add_xaxis(x_data)
+        .add_yaxis("数量", y_data)
+        .set_global_opts(
+            title_opts=opts.TitleOpts(title=title),
+            xaxis_opts=opts.AxisOpts(name=xaxis_name),
+            yaxis_opts=opts.AxisOpts(name='数量')
+        )
+    )
 
-# 绘制型号与价格关系的柱状图
-plt.subplot(2, 2, 2)
-top_body_types.plot(kind='bar', color='lightgreen')
-plt.title('Top 6 型号与价格关系')
-plt.xlabel('型号')
-plt.ylabel('价格')
-plt.xticks(rotation=0)
-plt.grid(axis='y')
-plt.tight_layout()
-plt.show()
+    # 保存为HTML文件
+    bar.render(f"Top6_{category}_价格关系.html")
 
-
-
-# 绘制里程数与价格关系的柱状图
-plt.subplot(2, 2, 4)
-top_kilometers.plot(kind='bar', color='lightcoral')
-plt.title("Top 6 '里程数与价格的关系'")
-plt.xlabel('里程数')
-plt.ylabel('价格')
-plt.xticks(rotation=0)
-plt.grid(axis='y')
-
-plt.tight_layout()
-plt.show()
+# 逐个生成和保存柱状图
+for category in categories:
+    plot_and_save_bar_chart(category)
