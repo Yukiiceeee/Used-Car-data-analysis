@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 ## 1) 载入训练集和测试集；
 path = 'C:/Users/王斯哲/PycharmProjects/pythonProject/'
-Train_data = pd.read_csv(path+'used_car_train_20200313.csv', sep=' ')
+Train_data = pd.read_csv(path+'data_1.csv')
 Test_data = pd.read_csv(path+'used_car_testB_20200421.csv', sep=' ')
 
 print('Train data shape:',Train_data.shape)
