@@ -56,6 +56,8 @@ Test_data=pd.DataFrame(Test_data,columns=test_columns)
 
 Train_data=Train_data.drop(['SaleID','regDate','creatDate','regionCode','model','bodyType_未知','gearbox_未知','fuelType_未知',
                             'price_bin','train','notRepairedDamage_未知','power'],axis=1)
+Test_data=Test_data.drop(['SaleID','regDate','creatDate','regionCode','model','bodyType_未知','gearbox_未知','fuelType_未知',
+                            'price_bin','train','notRepairedDamage_未知','power'],axis=1)
 
 
 # 特征筛选 ---相关性分析 特征提取，特征选择
