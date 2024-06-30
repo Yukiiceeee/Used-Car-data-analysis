@@ -152,7 +152,7 @@ for kind, kind_data in Train_gb:
     info['brand_price_average'] = round(kind_data.price.sum() / (len(kind_data) + 1), 2)
     all_info[kind] = info
 brand_fe = pd.DataFrame(all_info).T.reset_index().rename(columns={"index": "brand"})
-data = data.merge(brand_fe, how='left', on='brand')
+# data = data.merge(brand_fe, how='left', on='brand')
 brand_fe.to_excel(path+'品牌价格信息.xlsx')
 # 数据分桶 以 power 为例
 # 这时候我们的缺失值也进桶了，
@@ -165,7 +165,7 @@ brand_fe.to_excel(path+'品牌价格信息.xlsx')
 
 # 当然还有很多原因，LightGBM 在改进 XGBoost 时就增加了数据分桶，增强了模型的泛化性
 
-bin = [i*10 for i in range(31)]
+bin = [i*20 for i in range(15)]
 data['power_bin'] = pd.cut(data['power'], bin, labels=False)
 print(data[['power_bin', 'power']].head())
 

@@ -21,7 +21,7 @@ Test_data['city'] = Test_data['regionCode'].apply(lambda x : str(x)[:-2])
 
 
 # 数据分桶
-bin = [i*10 for i in range(31)]
+bin = [i*20 for i in range(15)]
 Test_data['power_bin'] = pd.cut(Test_data['power'], bin, labels=False)
 
 
@@ -37,16 +37,25 @@ data.drop(['seller','name','offerType','city'],axis=1,inplace=True)
 data = pd.get_dummies(data, columns=['brand', 'bodyType', 'fuelType',
                                      'gearbox', 'notRepairedDamage', 'power_bin'],dtype=int)
 
-# #归一化
-# transformers = MinMaxScaler()
-# data = transformers.fit_transform(data)
 
 
 Train_data=data[data['train']==1]
 Test_data=data[data['train']==0]
 
 
+train_columns=Train_data.columns
+test_columns=Test_data.columns
 
+# #归一化
+transformers = MinMaxScaler((0,1))
+Train_data = transformers.fit_transform(Train_data)
+Test_data = transformers.fit_transform(Test_data)
+
+Train_data=pd.DataFrame(Train_data,columns=train_columns)
+Test_data=pd.DataFrame(Test_data,columns=test_columns)
+
+Train_data=Train_data.drop(['SaleID','regDate','creatDate','regionCode','model','bodyType_未知','gearbox_未知','fuelType_未知',
+                            'price_bin','train','notRepairedDamage_未知','power'],axis=1)
 
 
 # 特征筛选 ---相关性分析 特征提取，特征选择
