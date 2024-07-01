@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def feature_hist(data):
+def feature_hist(data,name):
     # 绘制直方图
     plt.figure(figsize=(12, 4))  # 设置图的大小
     # 绘制 power 列的直方图
@@ -27,10 +27,12 @@ def feature_hist(data):
     plt.title('Histogram of Price')
 
     plt.tight_layout()  # 调整子图之间的间距，使得图像更美观
+    plt.savefig(name)
     plt.show()
 
 # 载入训练集和测试集；
 path = './data/'
+fig_path = './figures/'
 Train_data = pd.read_csv(path+'used_car_train_20200313.csv', sep=' ')
 Test_data = pd.read_csv(path+'used_car_testB_20200421.csv', sep=' ')
 
@@ -46,7 +48,7 @@ print(Train_data.describe(include='all'))
 Train_data.describe(include='all').to_csv(path+"描述性统计.csv")
 
 
-feature_hist(Train_data)
+feature_hist(Train_data,fig_path+'原始数据')
 
 
 # 分离label即预测值
@@ -76,7 +78,7 @@ for column in filling_columns:
 Train_data.dropna(subset=['model'], inplace=True)
 
 # 连续变量的异常值处理
-def outliers_proc(data, col_name, scale=3):
+def outliers_proc(data, col_name,scale=3):
     """
     用于清洗异常值，默认用 box_plot（scale=3）进行清洗
     :param data: 接收 pandas 数据格式
@@ -119,6 +121,7 @@ def outliers_proc(data, col_name, scale=3):
     fig, ax = plt.subplots(1, 2, figsize=(10, 7))
     sns.boxplot(y=data[col_name], data=data, palette="Set1", ax=ax[0])
     sns.boxplot(y=data_n[col_name], data=data_n, palette="Set1", ax=ax[1])
+    plt.savefig(fig_path+col_name)
     plt.show()
     return data_n
 
@@ -127,7 +130,8 @@ Train_data = outliers_proc(Train_data, 'power', scale=3)
 Train_data = outliers_proc(Train_data, 'kilometer', scale=3)
 Train_data = outliers_proc(Train_data, 'price', scale=3)
 
-feature_hist(Train_data)
+feature_hist(Train_data,fig_path+'异常值处理后')
+
 
 data=Train_data
 # 使用时间：data['creatDate'] - data['regDate']，一般来说价格与使用时间成反比
