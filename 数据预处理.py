@@ -5,6 +5,29 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def feature_hist(data):
+    # 绘制直方图
+    plt.figure(figsize=(12, 4))  # 设置图的大小
+    # 绘制 power 列的直方图
+    plt.subplot(1, 3, 1)  # 1行3列，第1个子图
+    sns.histplot(data['power'], bins=30, kde=True, color='blue')
+    plt.xlabel('Power')
+    plt.title('Histogram of Power')
+
+    # 绘制 kilometer 列的直方图
+    plt.subplot(1, 3, 2)  # 1行3列，第2个子图
+    sns.histplot(data['kilometer'], bins=30, kde=True, color='green')
+    plt.xlabel('Kilometer')
+    plt.title('Histogram of Kilometer')
+
+    # 绘制 price 列的直方图
+    plt.subplot(1, 3, 3)  # 1行3列，第3个子图
+    sns.histplot(data['price'], bins=30, kde=True, color='red')
+    plt.xlabel('Price')
+    plt.title('Histogram of Price')
+
+    plt.tight_layout()  # 调整子图之间的间距，使得图像更美观
+    plt.show()
 
 # 载入训练集和测试集；
 path = './data/'
@@ -22,13 +45,18 @@ print(Train_data.info())
 print(Train_data.describe(include='all'))
 Train_data.describe(include='all').to_csv(path+"描述性统计.csv")
 
+
+feature_hist(Train_data)
+
+
 # 分离label即预测值
 Y_train = Train_data['price']
 # 数字特征
 numeric_features = ['power', 'kilometer', 'v_0', 'v_1', 'v_2', 'v_3', 'v_4', 'v_5', 'v_6', 'v_7', 'v_8', 'v_9', 'v_10', 'v_11', 'v_12', 'v_13','v_14' ]
-
 # # 类型特征
 categorical_features = ['name', 'model', 'brand', 'bodyType', 'fuelType', 'gearbox', 'notRepairedDamage', 'regionCode',]
+
+
 
 # 特征nunique分布，对于类别特征，查看value_counts统计值，观察是否有异常值
 for cat_fea in categorical_features:
@@ -99,9 +127,10 @@ Train_data = outliers_proc(Train_data, 'power', scale=3)
 Train_data = outliers_proc(Train_data, 'kilometer', scale=3)
 Train_data = outliers_proc(Train_data, 'price', scale=3)
 
+feature_hist(Train_data)
 
 data=Train_data
-# 使用时间：data['creatDate'] - data['regDate']，反应汽车使用时间，一般来说价格与使用时间成反比
+# 使用时间：data['creatDate'] - data['regDate']，一般来说价格与使用时间成反比
 # 不过要注意，数据里有时间出错的格式，所以我们需要 errors='coerce'
 data['used_time'] = (pd.to_datetime(data['creatDate'], format='%Y%m%d', errors='coerce') -
                             pd.to_datetime(data['regDate'], format='%Y%m%d', errors='coerce')).dt.days
@@ -138,8 +167,10 @@ bin = [i*20 for i in range(15)]
 data['power_bin'] = pd.cut(data['power'], bin, labels=False)
 print(data[['power_bin', 'power']].head())
 
+# 对kilometer分箱
 # bin1 = [i*4 for i in range(5)]
 # data['kilometer_bin'] = pd.cut(data['kilometer'], bin1, labels=False)
+
 # 对price等频率分箱
 data['price_bin'] = pd.qcut(data['price'], q=3, labels=False)
 print(data[['price_bin', 'price']].head())
@@ -149,7 +180,6 @@ print(data.columns)
 
 
 data.to_csv(path+'data_数据清洗.csv', index=0)
-
 
 
 mappingBrand = {
@@ -291,5 +321,6 @@ data['city'] = data['city'].replace(code_mapping)
 data['city'] = data['city'].replace(mapping_city)
 
 data.to_csv(path+'数据分析所用数据.csv', index=0)
-# 打印替换后的结果
-print(data)
+
+
+
