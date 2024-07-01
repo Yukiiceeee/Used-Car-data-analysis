@@ -1,4 +1,4 @@
-from sklearn.linear_model import LinearRegression
+
 import warnings
 warnings.filterwarnings('ignore')
 import pandas as pd
@@ -20,9 +20,10 @@ Test_data = pd.read_csv(path+'模型构建所用数据-test.csv', )
 Train_data['used_time']=Train_data['used_time'].fillna(Train_data['used_time'].mean())
 
 # X_data=Train_data.drop(['SaleID','regDate','creatDate','regionCode'],axis=1)
-X_data=Train_data[['kilometer','v_0','v_1','v_2','v_3','v_4','v_5','v_6','v_7','used_time']]
+# X_data=Train_data[['kilometer','v_0','v_1','v_2','v_3','v_4','v_5','v_6','v_7','used_time']]
 
-# X_data=Train_data.drop(['price'],axis=1)
+X_data=Train_data.drop(['price','v_0','v_1','v_2','v_3','v_4','v_5','v_6','v_7','v_8','v_9','v_10','v_11','v_12','v_13','v_14'],axis=1)
+
 Y_data=Train_data['price']
 
 x_train,x_val,y_train,y_val = train_test_split(X_data,Y_data,test_size=0.3,random_state=33)
