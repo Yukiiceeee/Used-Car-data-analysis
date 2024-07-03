@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Awesome-pyecharts</title>
+                <script type="text/javascript" src="https://assets.pyecharts.org/assets/v5/echarts.min.js"></script>
+
+</head>
+<body >
+    <div id="64dfe2b7cb65446490656f61aa87674f" class="chart-container" style="width:900px; height:500px; "></div>
+    <script>
+        var chart_64dfe2b7cb65446490656f61aa87674f = echarts.init(
+            document.getElementById('64dfe2b7cb65446490656f61aa87674f'), 'white', {renderer: 'canvas'});
+        var option_64dfe2b7cb65446490656f61aa87674f = {
+    "animation": true,
+    "animationThreshold": 2000,
+    "animationDuration": 1000,
+    "animationEasing": "cubicOut",
+    "animationDelay": 0,
+    "animationDurationUpdate": 300,
+    "animationEasingUpdate": "cubicOut",
+    "animationDelayUpdate": 0,
+    "aria": {
+        "enabled": false
+    },
+    "color": [
+        "#5470c6",
+        "#91cc75",
+        "#fac858",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc"
+    ],
+    "series": [
+        {
+            "type": "pie",
+            "colorBy": "data",
+            "legendHoverLink": true,
+            "selectedMode": false,
+            "selectedOffset": 10,
+            "clockwise": true,
+            "startAngle": 90,
+            "minAngle": 0,
+            "minShowLabelAngle": 0,
+            "avoidLabelOverlap": true,
+            "stillShowZeroSum": true,
+            "percentPrecision": 2,
+            "showEmptyCircle": true,
+            "emptyCircleStyle": {
+                "color": "lightgray",
+                "borderColor": "#000",
+                "borderWidth": 0,
+                "borderType": "solid",
+                "borderDashOffset": 0,
+                "borderCap": "butt",
+                "borderJoin": "bevel",
+                "borderMiterLimit": 10,
+                "opacity": 1
+            },
+            "data": [
+                {
+                    "name": "\u5c0f\u578b\u8f66",
+                    "value": 135
+                },
+                {
+                    "name": "\u4e2d\u578bSUV",
+                    "value": 112
+                },
+                {
+                    "name": "\u4e2d\u578b\u8f66",
+                    "value": 108
+                },
+                {
+                    "name": "\u5fae\u578b\u8f66",
+                    "value": 53
+                },
+                {
+                    "name": "\u5c0f\u578bMPV",
+                    "value": 36
+                },
+                {
+                    "name": "\u5927\u578b\u8f7f\u8f66",
+                    "value": 24
+                },
+                {
+                    "name": "\u7d27\u51d1\u578b",
+                    "value": 17
+                },
+                {
+                    "name": "\u8dd1\u8f66",
+                    "value": 10
+                },
+                {
+                    "name": "\u8dd1\u8f66",
+                    "value": 5
+                }
+            ],
+            "radius": [
+                "0%",
+                "75%"
+            ],
+            "center": [
+                "50%",
+                "50%"
+            ],
+            "label": {
+                "show": true,
+                "margin": 8,
+                "formatter": "{b}: {d}%"
+            },
+            "labelLine": {
+                "show": true,
+                "showAbove": false,
+                "length": 15,
+                "length2": 15,
+                "smooth": false,
+                "minTurnAngle": 90,
+                "maxSurfaceAngle": 90
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        }
+    ],
+    "legend": [
+        {
+            "data": [
+                "\u5c0f\u578b\u8f66",
+                "\u4e2d\u578bSUV",
+                "\u4e2d\u578b\u8f66",
+                "\u5fae\u578b\u8f66",
+                "\u5c0f\u578bMPV",
+                "\u5927\u578b\u8f7f\u8f66",
+                "\u7d27\u51d1\u578b",
+                "\u8dd1\u8f66"
+            ],
+            "selected": {},
+            "type": "scroll",
+            "show": true,
+            "left": "80%",
+            "orient": "vertical",
+            "padding": 5,
+            "itemGap": 10,
+            "itemWidth": 25,
+            "itemHeight": 14,
+            "backgroundColor": "transparent",
+            "borderColor": "#ccc",
+            "borderRadius": 0,
+            "pageButtonItemGap": 5,
+            "pageButtonPosition": "end",
+            "pageFormatter": "{current}/{total}",
+            "pageIconColor": "#2f4554",
+            "pageIconInactiveColor": "#aaa",
+            "pageIconSize": 15,
+            "animationDurationUpdate": 800,
+            "selector": false,
+            "selectorPosition": "auto",
+            "selectorItemGap": 7,
+            "selectorButtonGap": 10
+        }
+    ],
+    "tooltip": {
+        "show": true,
+        "trigger": "item",
+        "triggerOn": "mousemove|click",
+        "axisPointer": {
+            "type": "line"
+        },
+        "showContent": true,
+        "alwaysShowContent": false,
+        "showDelay": 0,
+        "hideDelay": 100,
+        "enterable": false,
+        "confine": false,
+        "appendToBody": false,
+        "transitionDuration": 0.4,
+        "textStyle": {
+            "fontSize": 14
+        },
+        "borderWidth": 0,
+        "padding": 5,
+        "order": "seriesAsc"
+    },
+    "title": [
+        {
+            "show": true,
+            "text": "\u7528\u6237\u504f\u597d\u5206\u6790 - \u8f66\u578b\u5360\u6bd4",
+            "target": "blank",
+            "subtarget": "blank",
+            "padding": 5,
+            "itemGap": 10,
+            "textAlign": "auto",
+            "textVerticalAlign": "auto",
+            "triggerEvent": false
+        }
+    ]
+};
+        chart_64dfe2b7cb65446490656f61aa87674f.setOption(option_64dfe2b7cb65446490656f61aa87674f);
+    </script>
+</body>
+</html>
