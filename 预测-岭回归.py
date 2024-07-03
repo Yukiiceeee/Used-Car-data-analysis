@@ -8,7 +8,7 @@ import numpy as np
 from math import sqrt
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from matplotlib import pyplot as plt
-plt.rcParams['font.family'] = 'SimHei'
+import sklearn.linear_model as lm
 
 # 载入训练集和测试集；
 path = './data/'
@@ -33,29 +33,8 @@ x_train,x_val,y_train,y_val = train_test_split(X_data,Y_data,test_size=0.3,rando
 print(len(x_train),len(x_val),len(y_train))
 
 
-model1=LinearRegression()
+model1=lm.Ridge(0.6,fit_intercept=True,max_iter=5)
 
-
-
-# scores_train = []
-# scores = []
-
-# 5折交叉验证方式
-# sk = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
-# for train_ind, val_ind in sk.split(X_data, Y_data):
-#     train_x = X_data.iloc[train_ind].values
-#     train_y = Y_data.iloc[train_ind]
-#     val_x = X_data.iloc[val_ind].values
-#     val_y = Y_data.iloc[val_ind]
-#
-#     model1.fit(train_x, train_y)
-#     pred_train_xgb = model1.predict(train_x)
-#     pred_xgb = model1.predict(val_x)
-#
-#     score_train = mean_absolute_error(train_y, pred_train_xgb)
-#     scores_train.append(score_train)
-#     score = mean_absolute_error(val_y, pred_xgb)
-#     scores.append(score)
 
 model1.fit(x_train,y_train)
 
@@ -80,12 +59,19 @@ importance =abs(coefficient)
 index=X_data.columns
 feature_importance = pd.DataFrame(importance.T, index=index).sort_values(by=0, ascending=True)
 
-# # 查看指标重要度
-print(feature_importance)
-
+# # # 查看指标重要度
+# print(feature_importance)
+#
+# # 水平条形图绘制
+# feature_importance.tail(9).plot(kind='barh', title='Feature Importances', figsize=(10, 6), legend=False)
+# plt.savefig('岭回归')
+# plt.show()
+# print(feature_importance.tail(9))
+#决定系数
 score_train = model1.score(x_train,y_train)
 score_test = model1.score(x_val,y_val)
 print(score_train,score_test)
+
 
 # MSE
 mse_sklearn = mean_squared_error(y_val, y_predict1)
@@ -100,9 +86,6 @@ print("MSE (scikit-learn):", mse_sklearn)
 print("RMSE (scikit-learn):", rmse_sklearn)
 print("MAE (scikit-learn):", mae_sklearn)
 
-
-# 查看各项指标系数
-# importance =model1.feature_importances_
 # 将特征重要性转换为DataFrame
 feature_importance = pd.DataFrame(importance, index=X_data.columns, columns=['Importance'])
 feature_importance = feature_importance.sort_values(by='Importance', ascending=False)
@@ -135,7 +118,8 @@ merged_importance_df = merged_importance_df.sort_values(by='Importance',ascendin
 plt.figure(figsize=(12, 6))
 # plt.barh(merged_importance_df.index, merged_importance_df['Importance'])
 merged_importance_df.plot(kind='barh', title='Feature Importances', figsize=(10, 6), legend=False)
-plt.title('线性回归指标重要性')
+plt.title('岭回归指标重要性')
 plt.xlabel('Importance')
-plt.savefig('./figures/线性回归_importance.png')
+plt.savefig('./figures/岭回归_importance.png')
 plt.show()
+
