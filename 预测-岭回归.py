@@ -1,28 +1,25 @@
-from sklearn.linear_model import LinearRegression
+
 import warnings
 warnings.filterwarnings('ignore')
 import pandas as pd
-from sklearn.model_selection import GridSearchCV,cross_val_score,StratifiedKFold,train_test_split
-from sklearn.ensemble import RandomForestRegressor
 import numpy as np
-from math import sqrt
+from sklearn.model_selection import GridSearchCV,cross_val_score,StratifiedKFold,train_test_split
+from sklearn.linear_model import RidgeCV
+
+
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from matplotlib import pyplot as plt
-import sklearn.linear_model as lm
-
+from sklearn.linear_model import Ridge
+plt.rcParams['font.family'] = 'SimHei'
 # 载入训练集和测试集；
 path = './data/'
 Train_data = pd.read_csv(path+'模型构建所用数据-train.csv')
-# Train_data = pd.read_csv(path+'data_数据清洗.csv')
 Test_data = pd.read_csv(path+'模型构建所用数据-test.csv', )
 
 # Train_data = Train_data.fillna(-1)
 
 # 使用时间空缺填充成平均值
 Train_data['used_time']=Train_data['used_time'].fillna(Train_data['used_time'].mean())
-
-# X_data=Train_data.drop(['SaleID','regDate','creatDate','regionCode'],axis=1)
-# X_data=Train_data[['kilometer','v_0','v_1','v_2','v_3','v_4','v_5','v_6','v_7','used_time']]
 
 X_data=Train_data.drop(['price','v_0','v_1','v_2','v_3','v_4','v_5','v_6','v_7','v_8','v_9','v_10','v_11','v_12','v_13','v_14'],axis=1)
 Y_data=Train_data['price']
@@ -33,12 +30,41 @@ x_train,x_val,y_train,y_val = train_test_split(X_data,Y_data,test_size=0.3,rando
 print(len(x_train),len(x_val),len(y_train))
 
 
-model1=lm.Ridge(0.6,fit_intercept=True,max_iter=5)
 
+
+
+# #构造不同的lambda值
+# Lambdas=np.logspace(-5,2,200)
+# #存放偏回归系数
+# ridge_cofficients=[]
+# for Lambda in Lambdas:
+#     ridge=Ridge(alpha=Lambda)
+#     ridge.fit(x_train,y_train)
+#     ridge_cofficients.append(ridge.coef_)
+#
+# #绘制岭迹曲线
+# plt.rcParams['font.sans-serif']=['Microsoft YaHei']
+# plt.rcParams['axes.unicode_minus']=False
+# plt.style.use('ggplot')
+# plt.plot(Lambdas,ridge_cofficients)
+# #x轴做对数处理
+# plt.xscale('log')
+# plt.xlabel('Log(Lambda)')
+# plt.ylabel('Cofficients')
+# plt.show()
+
+
+#构造不同的lambda值
+Lambdas=np.logspace(-5,2,200)
+#设置交叉验证的参数，使用均方误差评估
+ridge_cv=RidgeCV(alphas=Lambdas,scoring='neg_mean_squared_error',cv=5)
+ridge_cv.fit(x_train,y_train)
+print(ridge_cv.alpha_)
+
+model1=Ridge(alpha=ridge_cv.alpha_,fit_intercept=True,max_iter=5)
 
 model1.fit(x_train,y_train)
 
-# scores = cross_val_score(model1,x_train,y_train,cv=4)
 
 print('各系数'+str(model1.coef_))
 print(X_data.columns)
@@ -59,14 +85,14 @@ importance =abs(coefficient)
 index=X_data.columns
 feature_importance = pd.DataFrame(importance.T, index=index).sort_values(by=0, ascending=True)
 
-# # # 查看指标重要度
-# print(feature_importance)
-#
-# # 水平条形图绘制
-# feature_importance.tail(9).plot(kind='barh', title='Feature Importances', figsize=(10, 6), legend=False)
-# plt.savefig('岭回归')
-# plt.show()
-# print(feature_importance.tail(9))
+# # 查看指标重要度
+print(feature_importance)
+
+# 水平条形图绘制
+feature_importance.tail(9).plot(kind='barh', title='Feature Importances', figsize=(10, 6), legend=False)
+plt.savefig('岭回归')
+plt.show()
+print(feature_importance.tail(9))
 #决定系数
 score_train = model1.score(x_train,y_train)
 score_test = model1.score(x_val,y_val)

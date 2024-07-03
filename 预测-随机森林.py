@@ -35,13 +35,7 @@ print(len(x_train),len(x_val),len(y_train))
 
 
 # 随机森林分类器
-model2 = RandomForestRegressor()
-# n_estimators=100, random_state=0
-
-
-
-
-
+model2 = RandomForestRegressor(n_estimators=190,max_depth=10)
 
 # 设置需要调试的参数
 tuned_parameters = {'n_estimators': [100,190],'max_depth': [5,10]}
@@ -142,42 +136,42 @@ print("MAE (scikit-learn):", mae_sklearn)
 
 
 
-# # 查看随机森林各项指标系数
-# importance =model2.feature_importances_
-#
-#
-# # 将特征重要性转换为DataFrame
-# feature_importance = pd.DataFrame(importance, index=X_data.columns, columns=['Importance'])
-# feature_importance = feature_importance.sort_values(by='Importance', ascending=False)
-#
-# # 打印特征重要性
-# print("Feature Importances:")
-# print(feature_importance)
-#
-#
-# merged_importance = {}
-# prefixes = ['brand_', 'bodyType_', 'gearbox_', 'power_bin_','fuelType','notRepairedDamage','Unnamed:0']
-#
-# for col in X_data.columns:
-#     added_to_merged = False
-#     for prefix in prefixes:
-#         if col.startswith(prefix):
-#             category_name = col.split('_')[0]  # 获取分类变量名称
-#             merged_importance[category_name] = merged_importance.get(category_name, 0) + feature_importance.loc[col]
-#             added_to_merged = True
-#             break
-#     if not added_to_merged:
-#         merged_importance[col] = feature_importance.loc[col]
-#
-# # 将合并后的重要性转换为DataFrame并排序
-# merged_importance_df = pd.DataFrame.from_dict(merged_importance, orient='index', columns=['Importance'])
-# merged_importance_df = merged_importance_df.sort_values(by='Importance',ascending=True)
-#
-# # 使用条形图展示合并后的特征重要性
-# plt.figure(figsize=(12, 6))
-# # plt.barh(merged_importance_df.index, merged_importance_df['Importance'])
-# merged_importance_df.plot(kind='barh', title='Feature Importances', figsize=(10, 6), legend=False)
-# plt.title('随机森林模型指标重要性')
-# plt.xlabel('Importance')
-# plt.show()
+# 查看随机森林各项指标系数
+importance =model2.feature_importances_
+
+
+# 将特征重要性转换为DataFrame
+feature_importance = pd.DataFrame(importance, index=X_data.columns, columns=['Importance'])
+feature_importance = feature_importance.sort_values(by='Importance', ascending=False)
+
+# 打印特征重要性
+print("Feature Importances:")
+print(feature_importance)
+
+
+merged_importance = {}
+prefixes = ['brand_', 'bodyType_', 'gearbox_', 'power_bin_','fuelType','notRepairedDamage','Unnamed:0']
+
+for col in X_data.columns:
+    added_to_merged = False
+    for prefix in prefixes:
+        if col.startswith(prefix):
+            category_name = col.split('_')[0]  # 获取分类变量名称
+            merged_importance[category_name] = merged_importance.get(category_name, 0) + feature_importance.loc[col]
+            added_to_merged = True
+            break
+    if not added_to_merged:
+        merged_importance[col] = feature_importance.loc[col]
+
+# 将合并后的重要性转换为DataFrame并排序
+merged_importance_df = pd.DataFrame.from_dict(merged_importance, orient='index', columns=['Importance'])
+merged_importance_df = merged_importance_df.sort_values(by='Importance',ascending=True)
+
+# 使用条形图展示合并后的特征重要性
+plt.figure(figsize=(12, 6))
+# plt.barh(merged_importance_df.index, merged_importance_df['Importance'])
+merged_importance_df.plot(kind='barh', title='Feature Importances', figsize=(10, 6), legend=False)
+plt.title('随机森林模型指标重要性')
+plt.xlabel('Importance')
+plt.show()
 

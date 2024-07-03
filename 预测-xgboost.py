@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 import matplotlib.pyplot as plt
+from sklearn.model_selection import GridSearchCV
 plt.rcParams['font.family'] = 'SimHei'
 
 # 载入训练集和测试集
@@ -22,7 +23,17 @@ Y_data = Train_data['price']
 x_train, x_val, y_train, y_val = train_test_split(X_data, Y_data, test_size=0.3, random_state=33)
 
 # 创建XGBoost模型
-model = XGBRegressor()
+model = XGBRegressor(n_estimators=190,max_depth=5)
+# 设置需要调试的参数
+tuned_parameters = {'n_estimators': [100,190],'max_depth': [5,10]}
+
+# 调用网格搜索函数
+rf_clf = GridSearchCV(model, tuned_parameters, cv=5, n_jobs=-1, scoring='neg_mean_squared_error')
+rf_clf.fit(x_train, y_train)
+print(rf_clf.best_params_)
+print(rf_clf.best_score_)
+
+
 
 # 训练模型
 model.fit(x_train, y_train)
