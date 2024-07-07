@@ -134,10 +134,11 @@ feature_hist(Train_data,fig_path+'异常值处理后')
 
 
 data=Train_data
-# 使用时间：data['creatDate'] - data['regDate']，一般来说价格与使用时间成反比
 # 不过要注意，数据里有时间出错的格式，所以我们需要 errors='coerce'
+
+# 使用时间：data['creatDate'] - data['regDate']
 data['used_time'] = (pd.to_datetime(data['creatDate'], format='%Y%m%d', errors='coerce') -
-                            pd.to_datetime(data['regDate'], format='%Y%m%d', errors='coerce')).dt.days
+                pd.to_datetime(data['regDate'], format='%Y%m%d', errors='coerce')).dt.days
 
 # 看一下空数据，有 15k 个样本的时间是有问题的，我们可以选择删除，也可以选择放着。
 data['used_time'].isnull().sum()
@@ -170,10 +171,6 @@ brand_fe.to_excel(path+'品牌价格信息.xlsx')
 bin = [i*20 for i in range(15)]
 data['power_bin'] = pd.cut(data['power'], bin, labels=False)
 print(data[['power_bin', 'power']].head())
-
-# 对kilometer分箱
-# bin1 = [i*4 for i in range(5)]
-# data['kilometer_bin'] = pd.cut(data['kilometer'], bin1, labels=False)
 
 # 对price等频率分箱
 data['price_bin'] = pd.qcut(data['price'], q=3, labels=False)

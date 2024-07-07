@@ -23,15 +23,16 @@ Y_data = Train_data['price']
 x_train, x_val, y_train, y_val = train_test_split(X_data, Y_data, test_size=0.3, random_state=33)
 
 # 创建XGBoost模型
-model = XGBRegressor(n_estimators=190,max_depth=5)
-# 设置需要调试的参数
-tuned_parameters = {'n_estimators': [100,190],'max_depth': [5,10]}
+model = XGBRegressor(n_estimators=550,max_depth=4)
 
-# 调用网格搜索函数
-rf_clf = GridSearchCV(model, tuned_parameters, cv=5, n_jobs=-1, scoring='neg_mean_squared_error')
-rf_clf.fit(x_train, y_train)
-print(rf_clf.best_params_)
-print(rf_clf.best_score_)
+# # 设置需要调试的参数
+# tuned_parameters = {'n_estimators': [450,550],'max_depth': [4,6]}
+#
+# # 调用网格搜索函数
+# rf_clf = GridSearchCV(model, tuned_parameters, cv=5, n_jobs=-1, scoring='neg_mean_squared_error')
+# rf_clf.fit(x_train, y_train)
+# print(rf_clf.best_params_)
+# print(rf_clf.best_score_)
 
 
 
